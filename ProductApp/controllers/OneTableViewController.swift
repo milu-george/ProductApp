@@ -49,7 +49,7 @@ class OneTableViewController: UIViewController {
 }
 
 extension OneTableViewController: UITableViewDelegate, UITableViewDataSource {
-
+    
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -58,17 +58,17 @@ extension OneTableViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tab/Users/p10/Desktop/Development/ProductApp/ProductApp/extra/CellOneTable.swiftleView.dequeueReusableCell(withIdentifier: "TableCellViewController", for: indexPath) as! TableCellViewController
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TableCellViewController", for: indexPath) as! TableCellViewController
         let finalProduct = finalProducts[indexPath.row]
         if let imageURL = URL(string: finalProduct.thumbnail) {
-                    ImageService.shared.loadImage(fromURL: imageURL) { (image) in
-                        if let image = image {
-                            DispatchQueue.main.async {
-                                cell.thumbnailImage?.image = image
-                            }
-                        }
+            ImageService.shared.loadImage(fromURL: imageURL) { (image) in
+                if let image = image {
+                    DispatchQueue.main.async {
+                        cell.thumbnailImage?.image = image
                     }
                 }
+            }
+        }
         cell.titleCell?.text = finalProduct.title
         cell.brandCell?.text = finalProduct.brand
         cell.categoryCell?.text = finalProduct.category
@@ -80,11 +80,9 @@ extension OneTableViewController: UITableViewDelegate, UITableViewDataSource {
     
     @objc func connected(sender: UIButton){
         let buttonTag = sender.tag
-                let detailedViewController = self.storyboard?.instantiateViewController(withIdentifier: "OneDetailDescription") as! OneDetailDescription
-                self.navigationController?.pushViewController(detailedViewController, animated: true)
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "OneDetailDescription") as! OneDetailDescription
+        vc.productDetail =  finalProducts[buttonTag]
+        self.navigationController?.pushViewController(vc, animated: true)
+        
     }
-    
 }
-
-
-   
